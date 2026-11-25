@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f3eb">
+  <title>Смачно — замовлення страв</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="Смачно — на головну">
+      <span class="brand-mark" aria-hidden="true">с</span>
+      <span>смачно<span class="brand-dot">.</span></span>
+    </a>
+    <nav class="main-nav" aria-label="Головна навігація">
+      <a href="#menu">Меню</a>
+      <a href="#orders" id="orders-link" hidden>Мої замовлення</a>
+      <a href="#account" id="account-link">Увійти</a>
+    </nav>
+    <a class="header-cart" href="#basket" aria-label="Перейти до кошика">
+      Кошик <span id="header-cart-count">0</span>
+    </a>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="status-dot"></span> Свіже щодня · забирайте у зручний час</p>
+        <h1 id="hero-title">Домашній смак.<br><span>Ваш час.</span></h1>
+        <p class="hero-description">Готуємо з любов’ю, а ви обираєте страви та час отримання. Без черг і зайвого очікування.</p>
+        <a class="button button-dark" href="#menu">Обрати страви <span aria-hidden="true">↘</span></a>
+      </div>
+      <div class="hero-art" aria-label="Ілюстрація обіду" role="img">
+        <div class="art-sun"></div>
+        <div class="plate"><span>🥣</span></div>
+        <span class="art-leaf leaf-one">✳</span>
+        <span class="art-leaf leaf-two">✦</span>
+        <span class="art-caption">З любов’ю<br>до кожної порції</span>
+      </div>
+    </section>
+
+    <div id="restaurant-notice" class="notice notice-closed" hidden>
+      Заклад тимчасово не приймає замовлення. Меню доступне для перегляду.
+    </div>
+
+    <section class="content-layout" id="menu">
+      <div class="menu-column">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">З нашої кухні</p>
+            <h2>Меню</h2>
+          </div>
+          <label class="search-box">
+            <span class="visually-hidden">Пошук у меню</span>
+            <span aria-hidden="true">⌕</span>
+            <input id="menu-search" type="search" placeholder="Знайти страву">
+          </label>
+        </div>
+        <div id="category-list" class="category-list" aria-label="Категорії меню"></div>
+        <div id="menu-list" class="menu-list" aria-live="polite"></div>
+      </div>
+
+      <aside class="basket-panel" id="basket" aria-labelledby="basket-title">
+        <div class="basket-heading">
+          <div>
+            <p class="eyebrow">Ваш вибір</p>
+            <h2 id="basket-title">Кошик <span id="basket-count" class="count-pill">0</span></h2>
+          </div>
+          <span class="basket-icon" aria-hidden="true">↗</span>
+        </div>
+        <div id="basket-items" class="basket-items"></div>
+        <div id="basket-empty" class="empty-state">
+          <span aria-hidden="true">🥢</span>
+          <p>Тут поки порожньо.<br>Додайте щось смачне з меню.</p>
+        </div>
+        <div class="basket-total">
+          <span>Попередня сума</span>
+          <strong id="basket-total">0 ₴</strong>
+        </div>
+        <label class="field-label" for="pickup-slot">Час отримання</label>
+        <select id="pickup-slot" class="field-control">
+          <option value="">Завантажуємо доступні інтервали…</option>
+        </select>
+        <label class="field-label" for="order-note">Коментар до замовлення <span class="optional">(необов’язково)</span></label>
+        <textarea id="order-note" class="field-control note-control" maxlength="300" placeholder="Наприклад, не класти прибори"></textarea>
+        <button id="checkout-button" class="button button-primary button-wide" type="button" disabled>Оформити замовлення</button>
+        <p class="fine-print">Остаточну суму сервер перевірить під час оформлення.</p>
+      </aside>
+    </section>
+
+    <section id="orders" class="account-section" hidden>
+      <div class="section-heading">
+        <div><p class="eyebrow">Історія</p><h2>Мої замовлення</h2></div>
+        <button class="button button-light" data-action="refresh-orders" type="button">Оновити</button>
+      </div>
+      <div id="orders-list" class="orders-list"></div>
+    </section>
+
+    <section id="account" class="account-section">
+      <div class="account-card">
+        <div class="account-intro">
+          <p class="eyebrow">Особистий кабінет</p>
+          <h2 id="account-title">Раді вас бачити</h2>
+          <p id="account-description">Увійдіть або створіть акаунт, щоб оформити замовлення й стежити за його станом.</p>
+        </div>
+        <div id="auth-forms" class="auth-forms">
+          <div class="auth-tabs" role="tablist" aria-label="Дія з обліковим записом">
+            <button class="auth-tab is-active" data-auth-mode="login" type="button">Увійти</button>
+            <button class="auth-tab" data-auth-mode="register" type="button">Створити акаунт</button>
+          </div>
+          <form id="login-form" class="auth-form">
+            <label class="field-label" for="login-email">Електронна пошта</label>
+            <input class="field-control" id="login-email" name="email" type="email" autocomplete="email" required maxlength="254">
+            <label class="field-label" for="login-password">Пароль</label>
+            <input class="field-control" id="login-password" name="password" type="password" autocomplete="current-password" required>
+            <button class="button button-dark button-wide" type="submit">Увійти</button>
+          </form>
+          <form id="register-form" class="auth-form" hidden>
+            <label class="field-label" for="register-name">Ваше ім’я</label>
+            <input class="field-control" id="register-name" name="name" autocomplete="name" required minlength="2" maxlength="80">
+            <label class="field-label" for="register-email">Електронна пошта</label>
+            <input class="field-control" id="register-email" name="email" type="email" autocomplete="email" required maxlength="254">
+            <label class="field-label" for="register-phone">Телефон</label>
+            <input class="field-control" id="register-phone" name="phone" type="tel" autocomplete="tel" required minlength="7" maxlength="30">
+            <label class="field-label" for="register-password">Пароль <span class="optional">(не менше 8 символів)</span></label>
+            <input class="field-control" id="register-password" name="password" type="password" autocomplete="new-password" required minlength="8" maxlength="128">
+            <button class="button button-dark button-wide" type="submit">Створити акаунт</button>
+          </form>
+          <form id="operator-setup-form" class="auth-form" hidden>
+            <p class="setup-note">Перший запуск: створіть обліковий запис оператора закладу. Це налаштування доступне лише один раз.</p>
+            <label class="field-label" for="operator-name">Ім’я оператора</label>
+            <input class="field-control" id="operator-name" name="name" required minlength="2" maxlength="80">
+            <label class="field-label" for="operator-email">Електронна пошта</label>
+            <input class="field-control" id="operator-email" name="email" type="email" required maxlength="254">
+            <label class="field-label" for="operator-phone">Телефон</label>
+            <input class="field-control" id="operator-phone" name="phone" type="tel" required minlength="7" maxlength="30">
+            <label class="field-label" for="operator-password">Пароль <span class="optional">(не менше 10 символів)</span></label>
+            <input class="field-control" id="operator-password" name="password" type="password" autocomplete="new-password" required minlength="10" maxlength="128">
+            <button class="button button-dark button-wide" type="submit">Створити оператора</button>
+          </form>
+        </div>
+        <div id="signed-in-panel" class="signed-in-panel" hidden>
+          <p id="signed-in-name"></p>
+          <p id="signed-in-role" class="muted"></p>
+          <button class="button button-light" id="logout-button" type="button">Вийти з акаунта</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="operator-panel" class="account-section operator-section" hidden>
+      <div class="section-heading">
+        <div><p class="eyebrow">Керування закладом</p><h2>Панель оператора</h2></div>
+        <button id="restaurant-toggle" class="button button-light" type="button">Завантаження…</button>
+      </div>
+      <p class="muted">Зміни статусу одразу відображаються в історії замовлення клієнта.</p>
+      <div class="operator-columns">
+        <div>
+          <h3>Нові та поточні замовлення</h3>
+          <div id="operator-orders" class="orders-list"></div>
+        </div>
+        <div>
+          <h3>Доступність меню</h3>
+          <div id="operator-menu" class="operator-menu"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <a class="brand brand-footer" href="/">смачно<span class="brand-dot">.</span></a>
+    <a href="#menu">Повернутися до меню ↑</a>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
